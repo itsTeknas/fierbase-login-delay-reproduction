@@ -11,7 +11,7 @@ declare var firebase: any;
 export class AppComponent {
   public endToEndLoginDelay = 0;
   public JWTLoginDelay = 0;
-  public user: any = ''
+  public user: any = "";
 
   constructor() {
   }
@@ -38,17 +38,20 @@ export class AppComponent {
     });
 
     firebase.auth().onIdTokenChanged((fuser) => {
-      console.log("received token")
-      const loginEndTs = new Date().getTime();
+      if (fuser) {
+        console.log("received token", fuser.toJSON())
+        this.user = fuser.toJSON().email;
+        const loginEndTs = new Date().getTime();
 
-      let loginStartTs: any = localStorage.getItem('LOGIN_START_TS');
-      let firebaseJWTstartTs: any = localStorage.getItem('FIREBASE_FETCH_JWT_START_TS') || new Date().getTime();
+        let loginStartTs: any = localStorage.getItem('LOGIN_START_TS');
+        let firebaseJWTstartTs: any = localStorage.getItem('FIREBASE_FETCH_JWT_START_TS') || new Date().getTime();
 
-      loginStartTs = parseInt(loginStartTs, 10);
-      firebaseJWTstartTs = parseInt(firebaseJWTstartTs, 10);
+        loginStartTs = parseInt(loginStartTs, 10);
+        firebaseJWTstartTs = parseInt(firebaseJWTstartTs, 10);
 
-      this.endToEndLoginDelay = loginEndTs - loginStartTs;
-      this.JWTLoginDelay = loginEndTs - firebaseJWTstartTs;
+        this.endToEndLoginDelay = loginEndTs - loginStartTs;
+        this.JWTLoginDelay = loginEndTs - firebaseJWTstartTs;
+      }
     })
   }
 
@@ -61,7 +64,6 @@ export class AppComponent {
       // This gives you a Google Access Token. You can use it to access the Google API.
       var token = result.credential.accessToken;
       // The signed-in user info.
-      that.user = result.user;
     })
   }
 
@@ -85,6 +87,7 @@ export class AppComponent {
     this.JWTLoginDelay = 0;
     this.endToEndLoginDelay = 0;
     localStorage.clear();
+    this.user = "";
     firebase.auth().signOut().then((ok) => {
       console.log("signed out")
     });
