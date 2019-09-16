@@ -85,6 +85,8 @@ export class AppComponent {
     this.JWTLoginDelay = 0;
     this.endToEndLoginDelay = 0;
     localStorage.clear();
-    firebase.auth().signOut();
+    firebase.auth().signOut().then((ok) => {
+      console.log("signed out")
+    });
   }
 }
