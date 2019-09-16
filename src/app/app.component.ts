@@ -11,7 +11,7 @@ declare var firebase: any;
 export class AppComponent {
   public endToEndLoginDelay = 0;
   public JWTLoginDelay = 0;
-  public user = ''
+  public user: any = ''
 
   constructor() {
   }
@@ -61,7 +61,7 @@ export class AppComponent {
       // This gives you a Google Access Token. You can use it to access the Google API.
       var token = result.credential.accessToken;
       // The signed-in user info.
-      this.user = result.user;
+      that.user = result.user;
     })
   }
 
